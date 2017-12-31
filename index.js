@@ -65,7 +65,7 @@ class HDMISwitch {
     this.host = host;
   }
 
-  getCurrentPort = async () => {
+  const getCurrentPort = async () => {
     this.log("Fetching current port");
     const result = await fetch(this.host);
     const data = await result.blob();
