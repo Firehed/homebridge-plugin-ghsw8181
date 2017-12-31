@@ -4,5 +4,9 @@
   "description": "Expose a networked GHSW8181 to Homebridge",
   "keywords": [
     "homebridge-plugin"
-  ]
+  ],
+  "engines": {
+    "homebridge": ">=0.2.0",
+    "node": ">=0.12.0"
+  }
 }
