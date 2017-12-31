@@ -24,6 +24,7 @@ module.exports = (homebridge) => {
 const Platform = class {
   constructor(log, config, api) {
     log('GHSW8181 plugin loaded');
+    log(arguments);
     this.log = log;
     this.config = config;
     this.api = api;
