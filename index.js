@@ -24,7 +24,6 @@ module.exports = (homebridge) => {
 class Platform {
   constructor(log, config, api) {
     log('GHSW8181 plugin loaded');
-    log(arguments);
     this.log = log;
     this.config = config;
     this.api = api;
@@ -49,7 +48,7 @@ class Platform {
     for (let i = 1; i <= ports; i++) {
       this.log("Creating switch " + i);
 
-      const acc = new Switch(this.log, sw); // (this.api.hap, this.log, sw);
+      const acc = new Switch(this.log, i); // (this.api.hap, this.log, sw);
       _switches.push(acc);
     }
 
@@ -72,15 +71,15 @@ class Switch {
   }
 
   getServices() {
-    var infoService = new Service.AccessoryInformation();
+    const infoService = new Service.AccessoryInformation();
     infoService
       .setCharacteristic(Characteristic.Manufacturer, 'IOGear')
       .setCharacteristic(Characteristic.Model, 'GHSW8181')
       .setCharacteristic(Characteristic.SerialNumber, 'GHSW8181-' + this.num);
 
-    switchService = new Service.switch(this.name);
+    const switchService = new Service.Switch(this.name);
     switchService
-      .getCharacteristic(Characteristic.on)
+      .getCharacteristic(Characteristic.On)
       .on('get', this.getState)
       .on('set', this.setState);
 
