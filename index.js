@@ -72,7 +72,7 @@ class HDMISwitch {
     const raw = request('GET', this.host + '/');
     const body = raw.getBody();
     const re = /Input: port([1-8])/;
-    return re.match(body);
+    return body.match(re);
   }
 }
 
