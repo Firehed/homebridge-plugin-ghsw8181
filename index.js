@@ -9,6 +9,8 @@
  */
 var Accessory, Characteristic, Service, UUIDGen;
 
+const request = require('sync-request');
+
 const platformName = 'homebridge-plugin-ghsw8181';
 const platformPrettyName = 'GHSW8181';
 
@@ -65,10 +67,10 @@ class HDMISwitch {
     this.host = host;
   }
 
-  const getCurrentPort = async () => {
+  getCurrentPort() {
     this.log("Fetching current port");
-    const result = await fetch(this.host);
-    const data = await result.blob();
+    const raw = request('GET', this.host + '/');
+    const body = raw.getBody();
     const re = /Input: port([1-8])/;
     return re.match(data);
   }
