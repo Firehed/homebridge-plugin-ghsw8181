@@ -27,9 +27,11 @@ const Platform = class {
     this.log = log;
     this.config = config;
     this.api = api;
+    log(config);
   }
 
   accessories(callback) {
+    this.log('accessories');
     this.log(this.config);
     const { ports, host } = this.config;
     if (ports != 8 && ports != 4) {
