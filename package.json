@@ -1,5 +1,8 @@
 {
   "name": "homebridge-platform-ghsw8181",
   "version": "0.0.1",
-  "description": "Expose a networked GHSW8181 to Homebridge"
+  "description": "Expose a networked GHSW8181 to Homebridge",
+  "keywords": [
+    "homebridge-plugin"
+  ]
 }
