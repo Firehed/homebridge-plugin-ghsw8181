@@ -21,7 +21,7 @@ module.exports = (homebridge) => {
   homebridge.registerPlatform(platformName, platformPrettyName, Platform, true);
 };
 
-const Platform = class {
+class Platform {
   constructor(log, config, api) {
     log('GHSW8181 plugin loaded');
     log(arguments);
@@ -29,11 +29,18 @@ const Platform = class {
     this.config = config;
     this.api = api;
     log(config);
+
+    this.api.on('error', (e) => {
+      this.log.error(e);
+    });
+    this.api.on('warning', (w) => {
+      this.log.warn(w);
+    });
   }
 
   accessories(callback) {
-    this.log('accessories');
-    this.log(this.config);
+    this.log.debug('accessories');
+    this.log.debug(this.config);
     const { ports, host } = this.config;
     if (ports != 8 && ports != 4) {
       throw new Error('Bad number of ports');
@@ -48,12 +55,11 @@ const Platform = class {
 
     callback(_switches);
   }
-
-};
+}
 
 // const SwitchAccessory = require('./SwitchAccessory');
 
-const Switch = class {
+class Switch {
   constructor(log, num) {
     this.log = log;
     this.num = num;
@@ -78,7 +84,7 @@ const Switch = class {
       .on('get', this.getState)
       .on('set', this.setState);
 
-    return [switchService];
+    return [infoService, switchService];
   }
 
   getState(cb) {
@@ -90,4 +96,4 @@ const Switch = class {
     this.log('POST /select port=' + this.num + '(on=' + on + ')');
     cb();
   }
-};
+}
