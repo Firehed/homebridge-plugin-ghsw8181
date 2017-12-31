@@ -66,7 +66,7 @@ class Switch {
   }
 
   identify(cb) {
-    this.log('id requested');
+    this.log.debug('id requested');
     cb();
   }
 
@@ -87,7 +87,7 @@ class Switch {
   }
 
   getState(cb) {
-    this.log('getstate' + this.num);
+    this.log.debug('getstate' + this.num);
     cb(null, true); // todo: http GET state
   }
 
