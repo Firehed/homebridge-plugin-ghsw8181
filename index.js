@@ -56,12 +56,12 @@ const Switch = class {
     this.name = "HDMI " + num;
   }
 
-  identify = (cb) => {
+  identify(cb) {
     this.log('id requested');
     cb();
   }
 
-  getServices = () => {
+  getServices() {
     var infoService = new Service.AccessoryInformation();
     infoService
       .setCharacteristic(Characteristic.Manufacturer, 'IOGear')
@@ -77,12 +77,12 @@ const Switch = class {
     return [switchService];
   }
 
-  getState = (cb) => {
+  getState(cb) {
     cb(null, true); // todo: http GET state
   }
 
-  setState = (on, cb) => {
-    this.log('POST /select port=' + this.num + '(on=' + on ')');
+  setState(on, cb) {
+    this.log('POST /select port=' + this.num + '(on=' + on + ')');
     cb();
   }
 };
