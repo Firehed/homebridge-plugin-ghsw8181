@@ -56,8 +56,6 @@ class Platform {
   }
 }
 
-// const SwitchAccessory = require('./SwitchAccessory');
-
 class Switch {
   constructor(log, num) {
     this.log = log;
@@ -80,8 +78,8 @@ class Switch {
     const switchService = new Service.Switch(this.name);
     switchService
       .getCharacteristic(Characteristic.On)
-      .on('get', this.getState)
-      .on('set', this.setState);
+      .on('get', this.getState.bind(this))
+      .on('set', this.setState.bind(this));
 
     return [infoService, switchService];
   }
