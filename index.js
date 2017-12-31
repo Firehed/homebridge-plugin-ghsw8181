@@ -9,8 +9,8 @@
  */
 var Accessory, Characteristic, Service, UUIDGen;
 
-const platformName = 'homebridge-switches';
-const platformPrettyName = 'AutomationSwitches';
+const platformName = 'homebridge-plugin-ghsw8181';
+const platformPrettyName = 'GHSW8181';
 
 module.exports = (homebridge) => {
   Accessory = homebridge.platformAccessory;
@@ -18,10 +18,10 @@ module.exports = (homebridge) => {
   Service = homebridge.hap.Service;
   UUIDGen = homebridge.hap.uuid;
 
-  homebridge.registerPlatform(platformName, platformPrettyName, platform, true);
+  homebridge.registerPlatform(platformName, platformPrettyName, Platform, true);
 };
 
-const platform = class {
+const Platform = class {
   constructor(log, config, api) {
     log('GHSW8181 plugin loaded');
     this.log = log;
@@ -30,6 +30,7 @@ const platform = class {
   }
 
   accessories(callback) {
+    this.log(this.config);
     const { ports, host } = this.config;
     if (ports != 8 && ports != 4) {
       throw new Error('Bad number of ports');
@@ -78,6 +79,7 @@ const Switch = class {
   }
 
   getState(cb) {
+    this.log('getstate' + this.num);
     cb(null, true); // todo: http GET state
   }
 
