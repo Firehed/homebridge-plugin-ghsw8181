@@ -117,6 +117,9 @@ class HDMISwitch {
 
     return fetch(this.host + '/select', {
       method: 'POST',
+      headers: {
+        'Content-type': 'application/x-www-form-urlencoded',
+      },
       body: 'port=' + port,
     })
       .then(res => {
