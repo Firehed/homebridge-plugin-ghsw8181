@@ -145,7 +145,7 @@ class HDMISwitch {
       .then(res => res.text())
       .then(text => text.match(/Input: port([1-8])/)[1])
       .then(portStr => {
-        selectedPort = parseInt(portStr, 10);
+        const selectedPort = parseInt(portStr, 10);
         this.lastCheck = Date.now();
         this.lastValue = selectedPort;
         this.checking = false;
@@ -177,6 +177,12 @@ class HDMISwitch {
       .then(res => {
         this.lastCheck = Date.now();
         this.lastValue = port;
+
+        for (const hdmiPort of this.ports) {
+          hdmiPort.switchService
+            .getCharacteristic(Characteristic.On)
+            .updateValue(port === hdmiPort.num);
+        }
       });
   }
 }
