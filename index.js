@@ -123,8 +123,7 @@ class HDMISwitch {
   }
 
   setPortTo(port) {
-    //const target = this.host + '/select';
-    const target = 'http://192.168.1.102/select';
+    const target = this.host + '/select';
 
     this.log('POST ' + target);
     const body = 'port='+port;
