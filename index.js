@@ -83,7 +83,14 @@ class HDMISwitch {
         resolve(this.lastValue);
       });
     } else if (this.checking) {
+      this.log("Sleeping for result");
       return new Promise(resolve => {
+        (function wait() {
+          if (!this.checking) {
+            return resolve(this.lastValue);
+          }
+          setTimeout(wait, 100);
+        })();
         while (this.checking);
         resolve(this.lastValue);
       });
