@@ -69,10 +69,6 @@ class HDMISwitch {
     this.checkInterval = 5000; // milliseconds
     this.checking = false;
 
-    this.checkInterval = this.checkInterval.bind(this);
-    this.checking = this.checking.bind(this);
-    this.lastCheck = this.lastCheck.bind(this);
-    this.lastValue = this.lastValue.bind(this);
     this.log = this.log.bind(this);
   }
 
@@ -88,16 +84,14 @@ class HDMISwitch {
       });
     } else if (this.checking) {
       this.log("Sleeping for result");
-      return new Promise(resolve => {
-        (function wait() {
-          if (!this.checking) {
-            return resolve(this.lastValue);
-          }
-          setTimeout(wait, 100);
-        })();
-        while (this.checking);
-        resolve(this.lastValue);
-      });
+      const wait = (resolve, reject) => {
+        if (!this.checking) {
+          resolve(this.lastValue);
+        } else {
+          setTimeout(wait, 250);
+        }
+      };
+      return new Promise(wait);
     } else {
       return this.fetchCurrentPort();
     }
