@@ -76,13 +76,14 @@ class HDMISwitch {
    */
   getCurrentPort() {
     const now = Date.now(); // milliseconds
-    if (this.lastCheck && this.lastCheck < now - this.checkInterval) {
-      return this.fetchCurrentPort();
-    } else {
+    if (this.lastCheck && this.lastCheck > (now - this.checkInterval)) {
       this.log("Using cached port");
       return new Promise((resolve, reject) => {
         resolve(this.lastValue);
       });
+    // todo: avoid initial thundering herd
+    } else {
+      return this.fetchCurrentPort();
     }
   }
 
