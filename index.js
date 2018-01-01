@@ -132,7 +132,7 @@ class HDMISwitch {
       method: 'POST',
       body: body,
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Type': 'text/plain; charset=utf-8',
         'Content-Length': '6'
       },
     };
