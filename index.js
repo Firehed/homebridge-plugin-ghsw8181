@@ -23,6 +23,8 @@ module.exports = (homebridge) => {
 };
 
 class HDMISwitch {
+
+  // These values are provided via Homebridge
   constructor(log, config, api) {
     if (!config) {
       log('Ignoring HDMI switch - no config');
@@ -55,9 +57,8 @@ class HDMISwitch {
     });
   }
 
-  // HomeBridge accessory registrartion
+  // Homebridge accessory registrartion
   accessories(callback) {
-    this.log('accessories');
     let ports = [];
     for (let i = 1; i <= this.portCount; i++) {
       const port = new Port(this, this.log, i);
@@ -68,17 +69,23 @@ class HDMISwitch {
   }
 
   /**
-   * return a promise that reoslves to the current port
+   * Returns a promise that resolves to the currently-selected HDMI port. May
+   * resolve a cached value. It's talking to a $2 computer, after all.
    */
   getCurrentPort() {
     const now = Date.now(); // milliseconds
+    // This is a very basic caching mechanism since the ESP8266 webserver can
+    // only process one request at a time and serving the request takes
+    // a couple seconds. Try to ensure that only one request is in flight at
+    // a time (and when it resolves, have it propagate to anything that was
+    // pending)
     if (this.lastCheck && this.lastCheck > (now - this.checkInterval)) {
-      this.log("Using cached port");
+      // this.log("Using cached port");
       return new Promise((resolve, reject) => {
         resolve(this.lastValue);
       });
-    } else if (this.checking) { // esp8266 will get trampled at more than a couple req/sec
-      this.log("Sleeping for result");
+    } else if (this.checking) {
+      // this.log("Sleeping for result");
       const wait = (resolve, reject) => {
         if (!this.checking) {
           resolve(this.lastValue);
@@ -92,8 +99,13 @@ class HDMISwitch {
     }
   }
 
+  /**
+   * Returns a promise for the actual network request (and response processing)
+   * to get the currently-selected HDMI port. Resolves to an integer between
+   * 1 and 8.
+   */
   fetchCurrentPort() {
-    this.log("Fetching current port");
+    // this.log("Fetching current port");
     this.checking = true;
     return fetch(this.host + '/')
       .then(res => {
@@ -109,10 +121,6 @@ class HDMISwitch {
         this.lastCheck = Date.now();
         this.lastValue = selectedPort;
         this.checking = false;
-        for (const port of this.ports) {
-          port.switchService.getCharacteristic(Characteristic.On).updateValue(port.num === selectedPort);
-
-        }
         return selectedPort;
       })
       .catch(e => {
@@ -138,6 +146,7 @@ class HDMISwitch {
         this.lastCheck = Date.now();
         this.lastValue = port;
 
+        // Push out the state change to all of the switches
         for (const hdmiPort of this.ports) {
           hdmiPort.switchService
             .getCharacteristic(Characteristic.On)
@@ -185,10 +194,8 @@ class Port {
   }
 
   getState(cb) {
-    this.log('getstate' + this.num);
     this.switch.getCurrentPort()
       .then(portText => {
-        this.log(portText);
         return portText;
       })
       .then(portText => cb(null, portText === this.num));
@@ -196,8 +203,9 @@ class Port {
 
   setState(on, cb) {
     if (!on) {
-      this.log('Ignoring request to turn port off');
+      // this.log('Ignoring request to turn port off');
       cb();
+      return;
     }
 
     this.switch.setPortTo(this.num)
