@@ -69,6 +69,10 @@ class HDMISwitch {
     this.checkInterval = 5000; // milliseconds
     this.checking = false;
 
+    this.checkInterval = this.checkInterval.bind(this);
+    this.checking = this.checking.bind(this);
+    this.lastCheck = this.lastCheck.bind(this);
+    this.lastValue = this.lastValue.bind(this);
     this.log = this.log.bind(this);
   }
 
@@ -175,7 +179,7 @@ class Port {
       cb();
     }
 
-    this.sw.setPortTo(this.num)
+    this.switch.setPortTo(this.num)
       .then(_ => cb());
   }
 }
