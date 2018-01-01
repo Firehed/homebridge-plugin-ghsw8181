@@ -118,8 +118,12 @@ class HDMISwitch {
     this.log('port=' + port);
     return fetch(target, { method: 'POST', body: 'port='+port })
       .then(res => {
-        this.log(res);
-        this.log(res.text());
+        this.log(res.ok);
+        this.log(res.status);
+        this.log(res.statusText);
+        this.log(res.headers.raw());
+        this.log(res.headers.get('content-type'));
+
         this.lastCheck = Date.now();
         this.lastValue = port;
       });
