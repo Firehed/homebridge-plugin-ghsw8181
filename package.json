@@ -19,8 +19,7 @@
     "babel-plugin-transform-class-properties": "^6.24.1"
   },
   "scripts": {
-    "build": "babel index.js --out-dir=build",
-    "install": "babel index.js --out-dir=build"
+    "build": "babel index.js --out-dir=build"
   },
   "main": "build/index.js",
   "devDependencies": {
