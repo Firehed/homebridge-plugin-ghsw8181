@@ -70,8 +70,6 @@ class HDMISwitch {
     this.checking = false;
 
     this.log = this.log.bind(this);
-
-    this.pending = [];
   }
 
   /**
@@ -85,9 +83,10 @@ class HDMISwitch {
         resolve(this.lastValue);
       });
     } else if (this.checking) {
-      const p = new Promise();
-      this.pending.push(p);
-      return p;
+      return new Promise(resolve => {
+        while (this.checking);
+        resolve(this.lastValue);
+      });
     } else {
       return this.fetchCurrentPort();
     }
@@ -104,9 +103,6 @@ class HDMISwitch {
         this.lastCheck = Date.now();
         this.lastValue = port;
         this.checking = false;
-        for (const pending of this.pending) {
-          pending.resolve(port);
-        }
         return port;
       });
   }
