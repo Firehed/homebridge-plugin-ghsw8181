@@ -82,13 +82,13 @@ class HDMISwitch {
       return new Promise((resolve, reject) => {
         resolve(this.lastValue);
       });
-    } else if (this.checking) {
+    } else if (this.checking) { // esp8266 will get trampled at more than a couple req/sec
       this.log("Sleeping for result");
       const wait = (resolve, reject) => {
         if (!this.checking) {
           resolve(this.lastValue);
         } else {
-          setTimeout(wait, 250);
+          setTimeout(wait, 250, resolve, reject);
         }
       };
       return new Promise(wait);
