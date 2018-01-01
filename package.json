@@ -5,9 +5,6 @@
   "keywords": [
     "homebridge-plugin"
   ],
-  "dependencies": {
-    "sync-request": "^4.1"
-  },
   "engines": {
     "homebridge": ">=0.2.0",
     "node": ">=0.12.0"
