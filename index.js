@@ -11,7 +11,7 @@ var Accessory, Characteristic, Service, UUIDGen;
 
 const platformName = 'homebridge-plugin-ghsw8181';
 const platformPrettyName = 'GHSW8181';
-import 'whatwg-fetch';
+const fetch = require('node-fetch');
 
 module.exports = (homebridge) => {
   Accessory = homebridge.platformAccessory;
