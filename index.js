@@ -47,8 +47,6 @@ class HDMISwitch {
     this.checking = false;
     this.ports = [];
 
-    this.log = this.log.bind(this);
-
     this.api.on('error', (e) => {
       this.log.error(e);
     });
@@ -58,7 +56,7 @@ class HDMISwitch {
   }
 
   // Homebridge accessory registrartion
-  accessories(callback) {
+  accessories = (callback) => {
     let ports = [];
     for (let i = 1; i <= this.portCount; i++) {
       const port = new Port(this, this.log, i);
@@ -72,7 +70,7 @@ class HDMISwitch {
    * Returns a promise that resolves to the currently-selected HDMI port. May
    * resolve a cached value. It's talking to a $2 computer, after all.
    */
-  getCurrentPort() {
+  getCurrentPort = () => {
     const now = Date.now(); // milliseconds
     // This is a very basic caching mechanism since the ESP8266 webserver can
     // only process one request at a time and serving the request takes
@@ -80,12 +78,12 @@ class HDMISwitch {
     // a time (and when it resolves, have it propagate to anything that was
     // pending)
     if (this.lastCheck && this.lastCheck > (now - this.checkInterval)) {
-      // this.log("Using cached port");
+      this.log.debug("Using cached port");
       return new Promise((resolve, reject) => {
         resolve(this.lastValue);
       });
     } else if (this.checking) {
-      // this.log("Sleeping for result");
+      this.log.debug("Sleeping for result");
       const wait = (resolve, reject) => {
         if (!this.checking) {
           resolve(this.lastValue);
@@ -104,8 +102,8 @@ class HDMISwitch {
    * to get the currently-selected HDMI port. Resolves to an integer between
    * 1 and 8.
    */
-  fetchCurrentPort() {
-    // this.log("Fetching current port");
+  fetchCurrentPort = () => {
+    this.log.debug("Fetching current port");
     this.checking = true;
     return fetch(this.host + '/')
       .then(res => {
@@ -129,7 +127,7 @@ class HDMISwitch {
       });
   }
 
-  setPortTo(port) {
+  setPortTo = (port) => {
     // There's a weird interaction (pair of bugs) where this fetch wrapper
     // lowercases all of the HTTP header keys, and the ESP8266WebServer library
     // won't parse the POST body unless the Content-Length header is formatted
@@ -163,21 +161,19 @@ class Port {
     this.num = num;
     this.name = "HDMI " + num;
 
-    this.log = this.log.bind(this);
-
     [this.infoService, this.switchService] = this.createServices();
   }
 
-  identify(cb) {
+  identify = (cb) => {
     this.log('id requested');
     cb();
   }
 
-  getServices() {
+  getServices = () => {
     return [this.infoService, this.switchService];
   }
 
-  createServices() {
+  createServices = () => {
     const infoService = new Service.AccessoryInformation();
     infoService
       .setCharacteristic(Characteristic.Manufacturer, 'IOGear')
@@ -187,21 +183,18 @@ class Port {
     const switchService = new Service.Switch(this.name);
     switchService
       .getCharacteristic(Characteristic.On)
-      .on('get', this.getState.bind(this))
-      .on('set', this.setState.bind(this));
+      .on('get', this.getState)
+      .on('set', this.setState);
 
     return [infoService, switchService];
   }
 
-  getState(cb) {
+  getState = (cb) => {
     this.switch.getCurrentPort()
-      .then(portText => {
-        return portText;
-      })
       .then(portText => cb(null, portText === this.num));
   }
 
-  setState(on, cb) {
+  setState = (on, cb) => {
     if (!on) {
       // this.log('Ignoring request to turn port off');
       cb();

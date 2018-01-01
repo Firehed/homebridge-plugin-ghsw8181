@@ -13,5 +13,15 @@
   },
   "dependencies": {
     "node-fetch": "^1.7.3"
-  }
+  },
+  "devDependencies": {
+    "babel": "^6.23.0",
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-class-properties": "^6.24.1"
+  },
+  "scripts": {
+    "build": "babel index.js --out-dir=build",
+    "install": "babel index.js --out-dir=build"
+  },
+  "main": "build/index.js"
 }
