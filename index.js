@@ -115,7 +115,7 @@ class HDMISwitch {
         this.lastValue = port;
         this.checking = false;
         return port;
-      });
+      })
       .catch(e => {
         this.checking = false;
         this.log(e);
