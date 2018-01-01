@@ -92,7 +92,6 @@ class HDMISwitch {
       const port = new Port(this, this.log, i);
       ports.push(port);
     }
-    this.log.debug(ports);
     this.ports = ports;
     callback(ports);
   }
@@ -189,7 +188,7 @@ class Port {
   }
 
   getServices() {
-    return this._services;
+    return [this.infoService, this.switchService];
   }
 
   createServices() {
