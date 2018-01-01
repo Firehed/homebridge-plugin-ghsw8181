@@ -67,8 +67,11 @@ class HDMISwitch {
     this.lastCheck = null;
     this.lastValue = null;
     this.checkInterval = 5000; // milliseconds
+    this.checking = false;
 
     this.log = this.log.bind(this);
+
+    this.pending = [];
   }
 
   /**
@@ -81,7 +84,10 @@ class HDMISwitch {
       return new Promise((resolve, reject) => {
         resolve(this.lastValue);
       });
-    // todo: avoid initial thundering herd
+    } else if (this.checking) {
+      const p = new Promise();
+      this.pending.push(p);
+      return p;
     } else {
       return this.fetchCurrentPort();
     }
@@ -89,6 +95,7 @@ class HDMISwitch {
 
   fetchCurrentPort() {
     this.log("Fetching current port");
+    this.checking = true;
     return fetch(this.host + '/')
       .then(res => res.text())
       .then(text => text.match(/Input: port([1-8])/)[1])
@@ -96,7 +103,24 @@ class HDMISwitch {
         port = parseInt(port, 10);
         this.lastCheck = Date.now();
         this.lastValue = port;
+        this.checking = false;
+        for (const pending of this.pending) {
+          pending.resolve(port);
+        }
         return port;
+      });
+  }
+
+  setPortTo(port) {
+    this.log('POST /select port=' + port);
+
+    fetch(this.host + '/select', {
+      method: 'POST',
+      body: 'port=' + port,
+    })
+      .then(res => {
+        this.lastCheck = Date.now();
+        this.lastValue = port;
       });
   }
 }
@@ -143,7 +167,12 @@ class Port {
   }
 
   setState(on, cb) {
-    this.log('POST /select port=' + this.num + '(on=' + on + ')');
-    cb();
+    if (!on) {
+      this.log('Ignoring request to turn port off');
+      cb();
+    }
+
+    this.sw.setPortTo(this.num)
+      .then(_ => cb());
   }
 }
