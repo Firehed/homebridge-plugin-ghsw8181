@@ -90,7 +90,7 @@ class HDMISwitch {
     this.log("Fetching current port");
     return fetch(this.host + '/')
       .then(res => res.text())
-      .then(text => text.match(/Input: port([1-8])/)[1]);
+      .then(text => text.match(/Input: port([1-8])/)[1])
       .then(port => {
         port = parseInt(port, 10);
         this.lastCheck = Date.now();
