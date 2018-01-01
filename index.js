@@ -82,6 +82,13 @@ class HDMISwitch {
     this.ports = [];
 
     this.log = this.log.bind(this);
+
+    this.api.on('error', (e) => {
+      this.log.error(e);
+    });
+    this.api.on('warning', (w) => {
+      this.log.warn(w);
+    });
   }
 
   // HomeBridge accessory registrartion
