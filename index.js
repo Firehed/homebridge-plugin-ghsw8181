@@ -123,18 +123,12 @@ class HDMISwitch {
   }
 
   setPortTo(port) {
-    const target = this.host + '/select';
+    const target = this.host + '/select?port=' + port;
 
     this.log('POST ' + target);
-    const body = 'port='+port;
-    this.log(body);
     const params = {
       method: 'POST',
       body: body,
-      headers: {
-        'Content-Type': 'text/plain; charset=utf-8',
-        'Content-Length': '6'
-      },
     };
     return fetch(target, params)
       .then(res => {
