@@ -135,7 +135,7 @@ class HDMISwitch {
     // allows it to go through just fine.
     const target = this.host + '/select?port=' + port;
 
-    this.log('POST ' + target);
+    this.log.debug('POST ' + target);
     const params = {
       method: 'POST',
     };
