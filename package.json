@@ -2,6 +2,8 @@
   "name": "homebridge-platform-ghsw8181",
   "version": "0.0.1",
   "description": "Expose a networked GHSW8181 HDMI switch to Homebridge",
+  "license": "MIT",
+  "repository": "github:Firehed/homebridge-platform-ghsw8181",
   "keywords": [
     "homebridge-plugin",
     "ghsw8181",
@@ -13,5 +15,14 @@
   },
   "dependencies": {
     "node-fetch": "^1.7.3"
-  }
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "eslint": "^4.14.0"
+  },
+  "scripts": {
+    "build": "babel index.js --out-dir=build"
+  },
+  "main": "build/index.js"
 }
