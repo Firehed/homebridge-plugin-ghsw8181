@@ -22,46 +22,6 @@ module.exports = (homebridge) => {
   homebridge.registerPlatform(platformName, platformPrettyName, HDMISwitch, true);
 };
 
-/*
-class Platform {
-  constructor(log, config, api) {
-    log('GHSW8181 plugin loaded');
-    this.log = log;
-    this.config = config;
-    this.api = api;
-    log(config);
-
-    this.api.on('error', (e) => {
-      this.log.error(e);
-    });
-    this.api.on('warning', (w) => {
-      this.log.warn(w);
-    });
-  }
-
-  accessories(callback) {
-    this.log.debug('accessories');
-    this.log.debug(this.config);
-    const { ports, host } = this.config;
-    if (ports != 8 && ports != 4) {
-      throw new Error('Bad number of ports');
-    }
-
-    const sw = new HDMISwitch(this.log, host);
-
-    let _ports = [];
-    for (let i = 1; i <= ports; i++) {
-      this.log("Creating switch " + i);
-
-      const acc = new Port(sw, this.log, i); // (this.api.hap, this.log, sw);
-      _ports.push(acc);
-    }
-
-    callback(_ports);
-  }
-}
-*/
-
 class HDMISwitch {
   constructor(log, config, api) {
     if (!config) {
