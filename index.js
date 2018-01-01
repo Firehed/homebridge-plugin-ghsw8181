@@ -86,12 +86,15 @@ class HDMISwitch {
 
   // HomeBridge accessory registrartion
   accessories(callback) {
-    this.ports = [];
+    this.log.debug('accessories');
+    let ports = [];
     for (let i = 1; i <= this.portCount; i++) {
       const port = new Port(this, this.log, i);
-      this.ports.push(port);
+      ports.push(port);
     }
-    callback(this.ports);
+    this.log.debug(ports);
+    this.ports = ports;
+    callback(ports);
   }
 
   /**
