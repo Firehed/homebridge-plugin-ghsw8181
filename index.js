@@ -64,6 +64,10 @@ class Platform {
 
 class HDMISwitch {
   constructor(log, config, api) {
+    if (!config) {
+      log('Ignoring HDMI switch - no config');
+      return;
+    }
     log('GHSW8181 plugin loaded');
     this.log = log;
     this.api = api;
