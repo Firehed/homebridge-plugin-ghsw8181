@@ -129,7 +129,15 @@ class HDMISwitch {
     this.log('POST ' + target);
     const body = 'port='+port;
     this.log(body);
-    return fetch(target, { method: 'POST', body: body })
+    const params = {
+      method: 'POST',
+      body: body,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Length': '6'
+      },
+    };
+    return fetch(target, params)
       .then(res => {
         this.log(res.ok);
         this.log(res.status);
