@@ -101,6 +101,12 @@ class HDMISwitch {
     this.log("Fetching current port");
     this.checking = true;
     return fetch(this.host + '/')
+      .then(res => {
+        if (!res.ok) {
+          throw new Error(res.status + ' ' + res.statusText);
+        }
+        return res;
+      })
       .then(res => res.text())
       .then(text => text.match(/Input: port([1-8])/)[1])
       .then(port => {
@@ -110,10 +116,16 @@ class HDMISwitch {
         this.checking = false;
         return port;
       });
+      .catch(e => {
+        this.checking = false;
+        this.log(e);
+      });
   }
 
   setPortTo(port) {
-    const target = this.host + '/select';
+    //const target = this.host + '/select';
+    const target = 'http://192.168.1.102/select';
+
     this.log('POST ' + target);
     const body = 'port='+port;
     this.log(body);
