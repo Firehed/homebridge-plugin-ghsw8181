@@ -64,13 +64,39 @@ class HDMISwitch {
   constructor(log, host) {
     this.log = log;
     this.host = host;
+    this.lastCheck = null;
+    this.lastValue = null;
+    this.checkInterval = 5000; // milliseconds
+
+    this.log = this.log.bind(this);
   }
 
+  /**
+   * return a promise that reoslves to the current port
+   */
   getCurrentPort() {
+    const now = Date.now(); // milliseconds
+    if (this.lastCheck && this.lastCheck < now - this.checkInterval) {
+      return this.fetchCurrentPort();
+    } else {
+      this.log("Using cached port");
+      return new Promise((resolve, reject) => {
+        resolve(this.lastValue);
+      });
+    }
+  }
+
+  fetchCurrentPort() {
     this.log("Fetching current port");
     return fetch(this.host + '/')
       .then(res => res.text())
-      .then(text => text.match(/Input: port([1-8])/));
+      .then(text => text.match(/Input: port([1-8])/)[1]);
+      .then(port => {
+        port = parseInt(port, 10);
+        this.lastCheck = Date.now();
+        this.lastValue = port;
+        return port;
+      });
   }
 }
 
