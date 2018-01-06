@@ -19,7 +19,7 @@ module.exports = homebridge => {
   Service = homebridge.hap.Service;
   UUIDGen = homebridge.hap.uuid;
 
-  homebridge.registerPlatform(platformName, platformPrettyName, HDMISwitch, true);
+  homebridge.registerPlatform(platformName, platformPrettyName, HDMISwitch, false);
 };
 
 class HDMISwitch {
